@@ -1,7 +1,6 @@
 (() => {
   "use strict";
 
-  const ORIGINAL = "../Alone in the Dark - Marconi Version";
   const SAVE_KEY = "aitd-marconi-web-save-v2";
   const MUSIC_PREF_KEY = "aitd-marconi-web-music";
   const DESIGN_WIDTH = 1016;
@@ -235,7 +234,7 @@
     finalNewGame: document.querySelector("#final-new-game"),
   };
 
-  const asset = (folder, filename) => `${ORIGINAL}/${folder}/${filename}`;
+  const asset = (folder, filename) => `assets/${folder}/${filename}`;
   const percent = (value, total) => `${(value / total) * 100}%`;
 
   function hotspot(id, label, x, y, width, height, onClick, options = {}) {
