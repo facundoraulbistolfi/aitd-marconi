@@ -1,32 +1,15 @@
-# Auditoría preliminar de música
+# Auditoría de música
 
-Esta revisión determina qué archivos pueden incorporarse a una versión web publicable sin una señal evidente de conflicto. No reemplaza una revisión legal ni demuestra la titularidad de ninguna obra.
+## Procedencia declarada
 
-## Resultado de procedencia
+Actualización del 28 de septiembre de 2026, a partir de una aclaración del autor del proyecto: todas las composiciones incluidas son propias. La frase humorística “Música: Robada” y las referencias humorísticas a otros juegos en los archivos auxiliares no describen su procedencia real.
 
-El archivo `Proyecto/Musica.txt` identifica gran parte del material como música de videojuegos y canciones de terceros, mientras que `Proyecto/Otros/Creditos.txt` declara “Música: Robada”. No hay archivos de licencia, permisos ni datos sobre el origen de las grabaciones.
+El autor autorizó expresamente la inclusión y publicación de estas pistas WAV junto con el port web en este repositorio y en GitHub Pages. Esta auditoría registra esa declaración; no es una verificación legal independiente.
 
-Por decisión del responsable del proyecto, las pistas se habilitan en esta copia local y no comercial. Esta decisión no cambia su estado de licencia: antes de publicar o distribuir el sitio deben reemplazarse o conseguirse los permisos correspondientes.
+## Archivos incluidos
 
-| Archivos | Procedencia indicada por el proyecto | Estado web |
-| --- | --- | --- |
-| `Main.wav` | Jurassic Park | Menú/selector local |
-| `Credits.wav` | Duke Nukem 3D | Selector local |
-| `Mus1.wav`–`Mus7.wav` | Jurassic Park, Lode Runner, Kung Fu Kumbia, Pokémon, City Connection y Hola Frank | Selector local |
-| `New.wav` | Battle City | Selector local |
-| `JDOW.wav` | Dancers | Selector local |
-| `Bradinsky.wav`, `Karinka.wav`, `Loginska.wav`, `Troika.wav` | Sin licencia ni procedencia verificable | Selector general y monitor |
-| `Mus8.wav` | No documentado | Selector local |
+Se publican las 16 pistas de `assets/Sonidos/`: `Main.wav`, `Credits.wav`, `Mus1.wav`–`Mus8.wav`, `New.wav`, `JDOW.wav`, `Bradinsky.wav`, `Karinka.wav`, `Loginska.wav` y `Troika.wav`.
 
-Incluso cuando una melodía tradicional pudiera estar en el dominio público, la grabación o interpretación concreta puede conservar derechos propios. Por eso no se incorporan los WAV sin conocer su fuente y licencia.
+La aplicación comprueba la presencia de `Mus1.wav` al iniciar. Si está disponible, habilita los controles de música; cada pista se solicita al navegador cuando el jugador la selecciona. La elección se conserva en el almacenamiento local y `Mus1.wav` es la selección inicial.
 
-## Criterio para futuras incorporaciones
-
-Una pista podrá entrar al proyecto cuando cumpla al menos una de estas condiciones:
-
-- creación original con autorización del autor;
-- licencia CC0 o equivalente que permita su uso y redistribución;
-- licencia compatible conservada junto al archivo y sus créditos;
-- permiso escrito del titular de la composición y de la grabación.
-
-Las pistas se leen directamente desde `Sonidos/` y sólo se descargan cuando el jugador las elige. La selección queda guardada en el navegador; el valor inicial reproduce `Mus1.wav`, igual que la opción predeterminada del Delphi original.
+Si en el futuro participan otros compositores o intérpretes, se actualizarán los créditos y las autorizaciones correspondientes.

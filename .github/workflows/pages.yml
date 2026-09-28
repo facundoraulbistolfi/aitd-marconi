@@ -29,9 +29,6 @@ jobs:
         run: |
           mkdir -p _site
           cp -R Proyecto/Web/. _site/
-          find _site -type f \
-            \( -iname '*.wav' \) \
-            -delete
       - name: Subir el sitio estático
         uses: actions/upload-pages-artifact@v3
         with:

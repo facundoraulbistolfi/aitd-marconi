@@ -29,7 +29,7 @@ No hace falta instalar dependencias ni compilar.
 - Control remoto con teclado numérico, cambio de canal, comentarios y las 23 imágenes televisivas originales.
 - Recorrido final completo: llave de camioneta, tapizado oculto, compartimiento 16180, jaula, llave dorada y portón de salida.
 - Pantalla final basada en `Final.gif`, con regreso al menú o comienzo de una nueva partida.
-- La banda sonora no se distribuye porque el material disponible identifica pistas de terceros y no incluye permisos. Si se agregan pistas licenciadas en el futuro, la interfaz puede detectarlas y habilitar los controles.
+- Incluye 16 pistas WAV. El autor declara que son composiciones propias y autorizó su publicación junto con el port web.
 - Menú de opciones inspirado en la ventana original, con pestañas Juego, Video y Sonido. Dificultad, idioma, resolución y detalle conservan los valores fijos y las respuestas humorísticas del Delphi; sólo la música cambia realmente. Se omitió la opción solicitada.
 - Ventana `Acerca de` basada en el formulario original, actualizada para identificar el port web de 2026.
 - Acceso de prueba desde el menú con la computadora encendida y la pila necesaria para probar los minijuegos.

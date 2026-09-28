@@ -7,6 +7,6 @@ Port web de Alone in the Dark — Marconi Version, iniciado en 2026.
 
 El sitio es estático y no necesita instalación. GitHub Actions publica la aplicación web automáticamente en cada cambio de `main`.
 
-La banda sonora no está incluida: el material original identifica canciones y grabaciones de terceros, pero no incluye permisos de redistribución. Los controles de música se ocultan automáticamente cuando los archivos no están disponibles.
+La banda sonora está incluida según la declaración del autor del proyecto: las composiciones son propias y autorizó su publicación junto con el port web.
 
 El repositorio contiene únicamente el port web y los archivos necesarios para publicarlo. Los derechos de los materiales originales permanecen con sus respectivos autores; este repositorio no agrega una licencia abierta.
