@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#080a0b" />
+    <title>Alone in the Dark — Marconi Version</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="game-shell" aria-label="Alone in the Dark — Marconi Version">
+      <header class="topbar">
+        <div class="message-panel">
+          <p id="message" aria-live="polite">No sé cómo llegué hasta acá. Tengo que encontrar una salida.</p>
+        </div>
+        <button class="menu-button" id="menu-button" type="button">Menú</button>
+        <strong id="location-name" class="sr-only" aria-live="polite">Baño superior</strong>
+      </header>
+
+      <section class="viewport" id="viewport" aria-label="Escena del juego">
+        <img id="background" alt="" draggable="false" />
+        <div id="hotspots" class="hotspots"></div>
+        <div class="vignette" aria-hidden="true"></div>
+      </section>
+
+      <section class="hud">
+        <div class="actions" role="group" aria-label="Acciones">
+          <button type="button" data-action="interact" class="active"><kbd>A</kbd> - Interactuar</button>
+          <button type="button" data-action="look"><kbd>S</kbd> - Mirar</button>
+          <button type="button" data-action="take"><kbd>D</kbd> - Agarrar</button>
+          <button type="button" data-action="use"><kbd>W</kbd> - Usar item</button>
+        </div>
+
+        <div class="inventory-panel">
+          <button id="inventory-prev" class="inventory-arrow" type="button" aria-label="Objeto anterior">&lt;</button>
+          <button id="inventory-item" class="inventory-item" type="button" disabled>
+            <img id="inventory-image" alt="" />
+            <span id="inventory-name" class="sr-only">Vacío</span>
+          </button>
+          <button id="inventory-next" class="inventory-arrow" type="button" aria-label="Objeto siguiente">&gt;</button>
+        </div>
+      </section>
+    </main>
+
+    <dialog id="menu-dialog" class="game-dialog">
+      <div class="dialog-card">
+        <img class="logo" src="../Alone in the Dark - Marconi Version/Objetos/Logo.bmp" alt="Alone in the Dark — Marconi Version" />
+        <div class="dialog-actions">
+          <button id="continue-game" type="button">&gt; Continuar &lt;</button>
+          <button id="new-game" type="button">&gt; Nueva partida &lt;</button>
+          <button id="demo-game" type="button">&gt; Probar minijuegos &lt;</button>
+          <button id="load-game" type="button">&gt; Cargar partida &lt;</button>
+          <button id="save-game" type="button">&gt; Guardar partida &lt;</button>
+          <button id="options-game" type="button">&gt; Opciones &lt;</button>
+          <button id="about-game" type="button">&gt; Acerca de &lt;</button>
+        </div>
+        <p class="save-note" id="save-note">La partida se guarda en este navegador.</p>
+        <small class="copyright">(C) 2014-2015 · Port web 2026</small>
+      </div>
+    </dialog>
+
+    <audio id="music-player" preload="none"></audio>
+
+    <dialog id="options-dialog" class="game-dialog options-dialog">
+      <section class="options-window" aria-labelledby="options-title">
+        <h2 id="options-title" class="sr-only">Opciones</h2>
+        <nav class="options-tabs" role="tablist" aria-label="Secciones de opciones">
+          <button type="button" role="tab" data-options-tab="game" aria-controls="options-game-panel">Juego</button>
+          <button type="button" role="tab" data-options-tab="video" aria-controls="options-video-panel">Video</button>
+          <button type="button" role="tab" data-options-tab="sound" aria-controls="options-sound-panel">Sonido</button>
+        </nav>
+
+        <div id="options-game-panel" class="options-panel" role="tabpanel" data-options-panel="game">
+          <fieldset class="options-group">
+            <legend>Dificultad</legend>
+            <label><input type="radio" name="difficulty" value="homicidio" /> Homicidio</label>
+            <label><input type="radio" name="difficulty" value="parricidio" /> Parricidio</label>
+            <label><input type="radio" name="difficulty" value="genocidio" /> Genocidio</label>
+            <label><input type="radio" name="difficulty" value="suicidio" /> Suicidio</label>
+          </fieldset>
+          <fieldset class="options-group compact">
+            <legend>Idioma</legend>
+            <label><input type="radio" name="language" value="espanol" /> Español</label>
+            <label><input type="radio" name="language" value="castellano" /> Castellano</label>
+          </fieldset>
+        </div>
+
+        <div id="options-video-panel" class="options-panel" role="tabpanel" data-options-panel="video" hidden>
+          <fieldset class="options-group compact">
+            <legend>Resolución</legend>
+            <label><input type="radio" name="resolution" value="320" /> CCCXX × CCXL</label>
+            <label><input type="radio" name="resolution" value="900" /> DCCC × DC</label>
+            <label><input type="radio" name="resolution" value="1024" /> MXXIV × DCCLXVIII</label>
+            <label><input type="radio" name="resolution" value="auto" /> Da igual</label>
+          </fieldset>
+          <fieldset class="options-group detail-options">
+            <legend>Detalle</legend>
+            <label><input type="radio" name="detail" value="low" /> Bajo</label>
+            <label><input type="radio" name="detail" value="medium" /> Medio</label>
+            <label><input type="radio" name="detail" value="high" /> Alto</label>
+            <label><input type="radio" name="detail" value="hd" /> HD</label>
+            <label><input type="radio" name="detail" value="super" /> Super HD</label>
+            <label><input type="radio" name="detail" value="mega" /> Mega HD</label>
+          </fieldset>
+        </div>
+
+        <div id="options-sound-panel" class="options-panel" role="tabpanel" data-options-panel="sound" hidden>
+          <fieldset class="options-group music-options">
+            <legend>Música en juego</legend>
+            <label><input type="radio" name="music" value="off" /> Apagada</label>
+            <label><input type="radio" name="music" value="main" /> Hauptthema</label>
+            <label><input type="radio" name="music" value="mus1" /> JP N.E.S</label>
+            <label><input type="radio" name="music" value="mus2" /> Sorna Eiland — Platz I</label>
+            <label><input type="radio" name="music" value="mus3" /> Ader Läufer</label>
+            <label><input type="radio" name="music" value="mus4" /> KF — Volkstanz</label>
+            <label><input type="radio" name="music" value="mus5" /> Lavender Volk</label>
+            <label><input type="radio" name="music" value="mus6" /> Anschluss Stadt</label>
+            <label><input type="radio" name="music" value="mus7" /> Hallo Fitzgerald!</label>
+            <label><input type="radio" name="music" value="mus8" /> Was ist Liebe?</label>
+          </fieldset>
+          <label class="special-music" for="special-music-select">
+            Pistas adicionales
+            <select id="special-music-select">
+              <option value="">Elegir…</option>
+              <option value="new">Nueva partida — New</option>
+              <option value="credits">Créditos</option>
+              <option value="jdow">Dancers — JDOW</option>
+              <option value="bradinsky">Bradinsky</option>
+              <option value="loginska">Loginska</option>
+              <option value="karinka">Karinka</option>
+              <option value="troika">Troika</option>
+            </select>
+          </label>
+          <button id="menu-music-play" class="options-preview" type="button">Probar tema del menú</button>
+          <small id="music-status" aria-live="polite">La música comienza después del primer clic.</small>
+        </div>
+
+        <footer class="options-footer">
+          <p id="options-status" aria-live="polite"></p>
+          <button id="options-accept" type="button">Aceptar</button>
+        </footer>
+      </section>
+    </dialog>
+
+    <dialog id="about-dialog" class="game-dialog about-dialog">
+      <section class="about-window" aria-labelledby="about-title">
+        <div class="about-copy">
+          <h2 id="about-title">Juego del Orto</h2>
+          <p class="about-subtitle">Alone in the Dark — Marconi Version</p>
+          <p>Versión 2.5 / Director's Cut</p>
+          <p>Port web 2026 · Compilación WEB.2026.1</p>
+          <p>Original 1995–2015 · FacBis Entertainment</p>
+          <p>Todos los derechos y zurdos reservados</p>
+          <p class="about-role">Programador original en jefe:</p>
+          <p class="about-author">Bachiller F.R. “Das Deutsche” Bistolfi Jr Jr</p>
+        </div>
+        <img src="../Alone in the Dark - Marconi Version/Objetos/LogoJdO.bmp" alt="Logo de Juego del Orto" />
+        <button id="about-accept" type="button">ACEPTAR</button>
+      </section>
+    </dialog>
+
+    <dialog id="code-dialog" class="game-dialog code-dialog">
+      <form id="code-form" class="dialog-card">
+        <span class="eyebrow">Cerradura</span>
+        <h2 id="code-title">Ingresar código</h2>
+        <label for="code-input">Código numérico</label>
+        <input id="code-input" name="code" inputmode="numeric" pattern="[0-9]*" autocomplete="off" />
+        <p id="code-feedback" class="save-note" aria-live="polite"></p>
+        <div class="dialog-actions horizontal">
+          <button id="code-cancel" type="button">Cancelar</button>
+          <button type="submit">Probar código</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="monitor-dialog" class="game-dialog minigame-dialog monitor-dialog">
+      <section class="dialog-card terminal-card" aria-labelledby="monitor-title">
+        <span class="eyebrow">Monitor de la computadora</span>
+        <h2 id="monitor-title">Elimine todos los cuadrados azules</h2>
+        <p class="minigame-help">Cada casilla cambia también las que tiene arriba, abajo y a los costados.</p>
+        <div id="monitor-grid" class="monitor-grid" role="grid" aria-label="Cuadrícula de cinco por cinco"></div>
+        <p id="monitor-feedback" class="minigame-feedback" aria-live="polite"></p>
+        <label class="monitor-music" for="monitor-music-select">
+          Música
+          <select id="monitor-music-select">
+            <option value="game">Música del juego</option>
+            <option value="off">Off</option>
+            <option value="bradinsky">Bradinsky</option>
+            <option value="loginska">Loginska</option>
+            <option value="karinka">Karinka</option>
+            <option value="troika">Troika</option>
+          </select>
+        </label>
+        <div class="dialog-actions minigame-actions">
+          <button id="monitor-close" type="button">Salir</button>
+          <button id="monitor-reset" type="button">Reiniciar</button>
+          <button id="monitor-code" type="button" disabled>Obtener código</button>
+        </div>
+      </section>
+    </dialog>
+
+    <dialog id="notebook-dialog" class="game-dialog minigame-dialog notebook-dialog">
+      <form id="notebook-form" class="dialog-card notebook-card">
+        <header class="notebook-topbar">
+          <h2>Resuelve los 4 acertijos:</h2>
+          <button id="notebook-close" type="button" aria-label="Cerrar netbook">X</button>
+        </header>
+        <div id="notebook-rows" class="notebook-rows"></div>
+        <section id="notebook-result" class="notebook-result" aria-live="polite"></section>
+        <p id="notebook-feedback" class="notebook-feedback" aria-live="polite"></p>
+      </form>
+    </dialog>
+
+    <dialog id="remote-dialog" class="game-dialog minigame-dialog remote-dialog">
+      <section class="dialog-card remote-card" aria-labelledby="remote-title">
+        <span class="eyebrow">Control remoto</span>
+        <h2 id="remote-title">Televisor</h2>
+        <div class="remote-screen">
+          <img id="remote-preview" alt="Canal actual del televisor" />
+          <output id="remote-channel" aria-label="Canal">999</output>
+        </div>
+        <p id="remote-feedback" class="minigame-feedback" aria-live="polite"></p>
+        <div class="remote-keypad" aria-label="Teclado numérico">
+          <button type="button" data-channel-digit="1">1</button>
+          <button type="button" data-channel-digit="2">2</button>
+          <button type="button" data-channel-digit="3">3</button>
+          <button type="button" data-channel-digit="4">4</button>
+          <button type="button" data-channel-digit="5">5</button>
+          <button type="button" data-channel-digit="6">6</button>
+          <button type="button" data-channel-digit="7">7</button>
+          <button type="button" data-channel-digit="8">8</button>
+          <button type="button" data-channel-digit="9">9</button>
+          <button id="remote-clear" type="button">Borrar</button>
+          <button type="button" data-channel-digit="0">0</button>
+          <button id="remote-enter" type="button">Ir</button>
+        </div>
+        <div class="remote-channel-controls">
+          <button id="remote-down" type="button">Canal −</button>
+          <button id="remote-up" type="button">Canal +</button>
+        </div>
+        <button id="remote-close" class="remote-close" type="button">Cerrar control</button>
+      </section>
+    </dialog>
+
+    <dialog id="final-dialog" class="game-dialog final-dialog">
+      <section class="final-card" aria-labelledby="final-title">
+        <img src="../Alone in the Dark - Marconi Version/Objetos/Final.gif" alt="El protagonista logra escapar de la casa" />
+        <h2 id="final-title">Escapaste de la casa</h2>
+        <p>Las pistas de Marconi te permitieron abrir el portón. La partida quedó guardada.</p>
+        <div class="dialog-actions horizontal">
+          <button id="final-menu" type="button">Volver al menú</button>
+          <button id="final-new-game" type="button">Nueva partida</button>
+        </div>
+      </section>
+    </dialog>
+
+    <script src="rooms.js?v=4" defer></script>
+    <script src="game.js?v=9" defer></script>
+  </body>
+</html>

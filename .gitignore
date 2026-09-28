@@ -1,0 +1,26 @@
+# No redistribuir las pistas de audio identificadas como material de terceros.
+/Proyecto/Alone in the Dark - Marconi Version/Sonidos/*.wav
+
+# Dependencias compiladas y archivos temporales del proyecto Delphi.
+/Proyecto/Alone in the Dark - Marconi Version/GifImage.pas
+/Proyecto/Alone in the Dark - Marconi Version/GifImage.dcu
+**/*.dcu
+**/*.ddp
+**/*.dof
+**/*.~*
+/Proyecto/Alone in the Dark - Marconi Version/AITDMV.cfg
+**/Thumbs.db
+
+# Material auxiliar y versiones antiguas que no pertenecen a esta publicación.
+/Proyecto/Alone in the Dark - Marconi Version (Alpha)/
+/Proyecto/Alone in the Dark - Marconi Version (Beta)/
+/Proyecto/Alone in the Dark - Marconi Version(Delta)/
+/Proyecto/Fotos/
+/Proyecto/Otros/
+/Proyecto/Declaraciones.txt
+/Proyecto/Estados.txt
+/Proyecto/Logo.bmp
+/Proyecto/Musica.txt
+/Proyecto/Notas.txt
+/Proyecto/Objetos.txt
+/Proyecto/*.pdf

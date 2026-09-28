@@ -1,0 +1,50 @@
+name: Publicar el juego en GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar el repositorio
+        uses: actions/checkout@v4
+      - name: Preparar GitHub Pages
+        uses: actions/configure-pages@v5
+      - name: Preparar los archivos del sitio
+        shell: bash
+        run: |
+          mkdir -p _site
+          cp -R "Proyecto/Alone in the Dark - Marconi Version" "_site/Alone in the Dark - Marconi Version"
+          cp -R "Proyecto/Web" _site/Web
+          cp .github/pages-index.html _site/index.html
+          find "_site/Alone in the Dark - Marconi Version" -type f \
+            \( -name '*.wav' -o -name 'GifImage.pas' -o -name 'GifImage.dcu' \
+               -o -name '*.dcu' -o -name '*.ddp' -o -name '*.dof' -o -name '*.cfg' -o -name '*.~*' \) \
+            -delete
+      - name: Subir el sitio estático
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Publicar GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
