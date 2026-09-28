@@ -28,12 +28,9 @@ jobs:
         shell: bash
         run: |
           mkdir -p _site
-          cp -R "Proyecto/Alone in the Dark - Marconi Version" "_site/Alone in the Dark - Marconi Version"
-          cp -R "Proyecto/Web" _site/Web
-          cp .github/pages-index.html _site/index.html
-          find "_site/Alone in the Dark - Marconi Version" -type f \
-            \( -name '*.wav' -o -name 'GifImage.pas' -o -name 'GifImage.dcu' \
-               -o -name '*.dcu' -o -name '*.ddp' -o -name '*.dof' -o -name '*.cfg' -o -name '*.~*' \) \
+          cp -R Proyecto/Web/. _site/
+          find _site -type f \
+            \( -iname '*.wav' \) \
             -delete
       - name: Subir el sitio estático
         uses: actions/upload-pages-artifact@v3

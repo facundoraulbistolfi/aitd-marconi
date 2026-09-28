@@ -1,17 +1,17 @@
 # Alone in the Dark — Marconi Version (web)
 
-Port progresivo del juego Delphi/VCL a una aplicación web estática.
+Port web estático de Alone in the Dark — Marconi Version.
 
 ## Probarlo
 
-Servir la carpeta `Proyecto` con cualquier servidor HTTP estático y abrir `/Web/`.
-Por ejemplo, desde `Proyecto`:
+Servir esta carpeta con cualquier servidor HTTP estático.
+Por ejemplo, desde `Proyecto/Web`:
 
 ```text
 python -m http.server 8080
 ```
 
-Luego abrir `http://localhost:8080/Web/`.
+Luego abrir `http://localhost:8080/`.
 
 No hace falta instalar dependencias ni compilar.
 
@@ -29,7 +29,7 @@ No hace falta instalar dependencias ni compilar.
 - Control remoto con teclado numérico, cambio de canal, comentarios y las 23 imágenes televisivas originales.
 - Recorrido final completo: llave de camioneta, tapizado oculto, compartimiento 16180, jaula, llave dorada y portón de salida.
 - Pantalla final basada en `Final.gif`, con regreso al menú o comienzo de una nueva partida.
-- En la copia local se pueden probar las 16 pistas WAV del proyecto original. La publicación de GitHub Pages las omite porque no hay permisos de redistribución documentados; la interfaz detecta esa ausencia y oculta los controles de música.
+- La banda sonora no se distribuye porque el material disponible identifica pistas de terceros y no incluye permisos. Si se agregan pistas licenciadas en el futuro, la interfaz puede detectarlas y habilitar los controles.
 - Menú de opciones inspirado en la ventana original, con pestañas Juego, Video y Sonido. Dificultad, idioma, resolución y detalle conservan los valores fijos y las respuestas humorísticas del Delphi; sólo la música cambia realmente. Se omitió la opción solicitada.
 - Ventana `Acerca de` basada en el formulario original, actualizada para identificar el port web de 2026.
 - Acceso de prueba desde el menú con la computadora encendida y la pila necesaria para probar los minijuegos.
@@ -44,10 +44,9 @@ No hace falta instalar dependencias ni compilar.
 - `Camioneta`, `Portón` y `Jaula` estaban declaradas pero vacías en Delphi y no tenían fondos propios. Sus interacciones se integraron en el fondo original del patio para completar el recorrido sin inventar mapas falsos.
 - El recorrido jugable y sus dependencias están documentados en `RECORRIDO.md`.
 
-## Arquitectura de migración
+## Arquitectura
 
-El código Delphi mezcla presentación, zonas clicables y reglas del juego dentro de `Juego.pas`.
-El port separa esos conceptos:
+El port separa presentación, estado y reglas del juego:
 
 - `scenes`: fondo, nombre y zonas clicables de cada vista.
 - `state`: ubicación, acción activa, inventario y banderas narrativas.
@@ -58,6 +57,6 @@ Los datos de las habitaciones viven en `rooms.js`; el motor, inventario, guardad
 
 ## Próximos hitos
 
-1. Convertir las pistas WAV a un formato web más liviano y preparar reemplazos licenciados antes de cualquier publicación pública.
+1. Incorporar música original o con licencia compatible y sus créditos.
 2. Incorporar créditos y opciones de accesibilidad.
 3. Añadir pruebas automatizadas de puzles y una importación opcional de partidas `.dat`.
