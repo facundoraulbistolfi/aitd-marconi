@@ -189,22 +189,14 @@
 
     <dialog id="monitor-dialog" class="game-dialog minigame-dialog monitor-dialog">
       <section class="dialog-card terminal-card" aria-labelledby="monitor-title">
-        <span class="eyebrow">Monitor de la computadora</span>
-        <h2 id="monitor-title">Elimine todos los cuadrados azules</h2>
-        <p class="minigame-help">Cada casilla cambia también las que tiene arriba, abajo y a los costados.</p>
+        <h2 id="monitor-title">JUEGO DEL ORTO</h2>
+        <aside class="monitor-help" aria-label="Ayuda">
+          <strong>AYUDA</strong>
+          <p><b>Objetivo:</b> dejar las 25 casillas rojas.</p>
+          <p><b>Cómo jugar:</b> cada clic invierte la casilla elegida y sus vecinas de arriba, abajo, izquierda y derecha.</p>
+        </aside>
         <div id="monitor-grid" class="monitor-grid" role="grid" aria-label="Cuadrícula de cinco por cinco"></div>
         <p id="monitor-feedback" class="minigame-feedback" aria-live="polite"></p>
-        <label class="monitor-music" for="monitor-music-select">
-          Música
-          <select id="monitor-music-select">
-            <option value="game">Música del juego</option>
-            <option value="off">Off</option>
-            <option value="bradinsky">Bradinsky</option>
-            <option value="loginska">Loginska</option>
-            <option value="karinka">Karinka</option>
-            <option value="troika">Troika</option>
-          </select>
-        </label>
         <div class="dialog-actions minigame-actions">
           <button id="monitor-close" type="button">Salir</button>
           <button id="monitor-reset" type="button">Reiniciar</button>

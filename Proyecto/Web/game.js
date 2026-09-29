@@ -205,7 +205,6 @@
     musicPlayer: document.querySelector("#music-player"),
     musicOptions: document.querySelector(".music-options"),
     specialMusicField: document.querySelector(".special-music"),
-    monitorMusicField: document.querySelector(".monitor-music"),
     aboutDialog: document.querySelector("#about-dialog"),
     aboutAccept: document.querySelector("#about-accept"),
     saveNote: document.querySelector("#save-note"),
@@ -227,7 +226,6 @@
     monitorClose: document.querySelector("#monitor-close"),
     monitorReset: document.querySelector("#monitor-reset"),
     monitorCode: document.querySelector("#monitor-code"),
-    monitorMusicSelect: document.querySelector("#monitor-music-select"),
     notebookDialog: document.querySelector("#notebook-dialog"),
     notebookForm: document.querySelector("#notebook-form"),
     notebookRows: document.querySelector("#notebook-rows"),
@@ -323,7 +321,6 @@
     elements.musicOptions.hidden = true;
     elements.specialMusicField.hidden = true;
     elements.menuMusicPlay.hidden = true;
-    elements.monitorMusicField.hidden = true;
     updateMusicStatus("La música original no está incluida en esta publicación.");
   }
 
@@ -499,7 +496,6 @@
       return;
     }
     renderMonitor();
-    elements.monitorMusicSelect.value = "game";
     elements.monitorDialog.showModal();
   }
 
@@ -1065,11 +1061,6 @@
   });
   elements.monitorReset.addEventListener("click", resetMonitor);
   elements.monitorCode.addEventListener("click", completeMonitor);
-  elements.monitorMusicSelect.addEventListener("change", () => {
-    const track = elements.monitorMusicSelect.value;
-    if (track === "game") playSelectedMusic();
-    else playMusic(track, { restart: true });
-  });
   elements.notebookClose.addEventListener("click", () => elements.notebookDialog.close());
   elements.notebookForm.addEventListener("submit", submitNotebookAnswer);
   elements.remoteDigits.forEach((button) => {
