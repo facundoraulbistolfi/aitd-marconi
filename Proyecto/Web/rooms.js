@@ -172,18 +172,6 @@
           exit("PG1", 952, 574, "FlechaAbajo1.bmp", "Volver"),
           h("pg2-gun", "Pistola", 624, 376, 57, 41, msg({ interact: "Las armas son innecesarias en las aventuras gráficas.", look: "Es un intento de Beretta.", take: "No veo cómo podría servirme.", use: "No puedo." })),
           h("pg2-spear", "Lanza", 552, 200, 65, 161, msg({ interact: "Esto ya se pone raro.", look: "Es una lanza africana.", take: "Ni siquiera podría usarla bien.", use: "No puedo." })),
-          h("pg2-hook", "Gancho", 632, 200, 65, 89, () => {
-            if (available("hook")) {
-              game.pickup("hook", {
-                interact: "El papel del jarrón decía ‘HOOK’. Quizás debería llevármelo.",
-                look: "Es un gancho de carnicero.",
-                success: "Me guardé el gancho de carnicero.",
-                use: "No puedo usarlo acá.",
-              });
-            } else {
-              game.respond({ interact: "Ya me llevé el gancho.", look: "Acá estaba el gancho.", take: "Ya lo tengo.", use: "No puedo." });
-            }
-          }),
           h("pg2-mark", "Marca en el placard", 784, 224, 153, 89, msg({ interact: "Todo muy turbio.", look: "No tengo idea de qué pasó acá.", take: "No veo cómo podría hacerlo.", use: "No puedo." })),
           h("pg2-notes", "Apuntes", 128, 424, 121, 73, () => {
             if (S().action === "interact") game.changeScene("APU");
@@ -502,6 +490,14 @@
         background: "PR.bmp",
         getHotspots: () => [
           exit("PA", 944, 552, "FlechaAbajo1.bmp", "Volver al patio"),
+          ...(available("hook") ? [
+            h("pr-hook", "Gancho de carnicero", 680, 245, 72, 128, pickup("hook", {
+              interact: "El papel del jarrón decía ‘HOOK’. Este gancho podría servirme para alcanzar algo.",
+              look: "Es un gancho de carnicero, ahora lleno de grasa y hollín.",
+              success: "Saqué el gancho de carnicero de la parrilla.",
+              use: "Primero debería recogerlo.",
+            }), sprite("Gancho.svg")),
+          ] : []),
           ...(!S().flags.screwdriverRecovered && available("screwdriver") ? [
             h("pr-screwdriver", "Destornillador atrapado", 382, 168, 275, 274, () => {
               if (S().action === "use" && S().selectedItem === "hook") {

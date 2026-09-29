@@ -22,8 +22,8 @@ Este documento fija la progresión implementada para que todas las pistas y mapa
 ## 3. Preparar las herramientas
 
 1. El código binario del jarrón indica `HOOK`.
-2. Recoger el gancho de carnicero en la segunda parte de la pieza de Guille.
-3. Abrir la reja y entrar al patio.
+2. Abrir la reja y entrar al patio.
+3. Recoger el gancho de carnicero dentro de la parrilla; el que se ve en la pieza de Guille queda como parte del fondo.
 4. Usar el gancho dentro de la parrilla para recuperar el destornillador.
 5. Usar el destornillador en el taller para soltar el martillo.
 6. Usar el martillo en la cocina para quitar la madera y recoger el cuchillo.
