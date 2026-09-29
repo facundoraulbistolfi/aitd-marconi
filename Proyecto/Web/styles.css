@@ -1503,6 +1503,107 @@ body {
   padding: 0 16px 16px;
 }
 
+.game-dialog.saves-dialog {
+  width: min(430px, calc(100% - 20px));
+  padding: 8px;
+  color: #000;
+  background: #d4d0c8;
+  font: 0.82rem "MS Sans Serif", Tahoma, sans-serif;
+}
+
+.saves-card h2 {
+  margin: 4px 0 6px;
+  font-size: 1rem;
+}
+
+.saves-card > p:not(.save-note) {
+  margin: 0 0 10px;
+}
+
+.saves-card label {
+  display: block;
+  margin: 0 0 3px;
+}
+
+.saves-card input {
+  width: 100%;
+  min-height: 30px;
+  margin-bottom: 8px;
+  border: 2px inset #fff;
+  border-radius: 0;
+  padding: 4px 6px;
+  color: #000;
+  background: #fff;
+  font: inherit;
+}
+
+.save-slots {
+  display: grid;
+  gap: 4px;
+}
+
+.save-slot {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+  align-items: center;
+  column-gap: 8px;
+  border: 2px outset #fff;
+  border-radius: 0;
+  padding: 5px 7px;
+  color: #000;
+  background: #d4d0c8;
+  font: inherit;
+  text-align: left;
+}
+
+.save-slot[aria-pressed="true"] {
+  border-style: inset;
+  background: #c3bfb7;
+}
+
+.save-slot-number {
+  grid-row: span 2;
+  color: #444;
+  font-size: 0.72rem;
+}
+
+.save-slot strong,
+.save-slot small {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.save-slot small {
+  color: #444;
+  font-size: 0.68rem;
+}
+
+.saves-feedback {
+  min-height: 1.2em;
+  margin: 6px 0;
+  color: #7b0000;
+}
+
+.saves-dialog .dialog-actions {
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.saves-dialog .dialog-actions button {
+  min-height: 32px;
+  padding: 3px;
+  color: #000;
+  background: #d4d0c8;
+  font: inherit;
+}
+
+.saves-dialog .dialog-actions button:disabled {
+  color: #777;
+}
+
 @media (max-width: 560px) {
   .monitor-dialog .terminal-card {
     padding-inline: 22px;

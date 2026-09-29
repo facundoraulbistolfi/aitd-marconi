@@ -2,6 +2,9 @@
   "use strict";
 
   const SAVE_KEY = "aitd-marconi-web-save-v2";
+  const SAVE_SLOTS_KEY = "aitd-marconi-web-save-slots-v1";
+  const SAVE_SLOT_COUNT = 3;
+  const SAVE_NAME_LIMIT = 32;
   const MUSIC_PREF_KEY = "aitd-marconi-web-music";
   const DESIGN_WIDTH = 1016;
   const DESIGN_HEIGHT = 591;
@@ -157,6 +160,10 @@
 
   let state = initialState();
   let pendingCode = null;
+  let saveMode = "save";
+  let selectedSaveSlot = 0;
+  let saveSlots = Array(SAVE_SLOT_COUNT).fill(null);
+  let activeSaveSlot = null;
   let selectedMusic = localStorage.getItem(MUSIC_PREF_KEY) || "mus1";
   if (selectedMusic !== "off" && !MUSIC_TRACKS[selectedMusic]) selectedMusic = "mus1";
   let currentMusic = null;
@@ -172,9 +179,17 @@
     menu: document.querySelector("#menu-dialog"),
     continueGame: document.querySelector("#continue-game"),
     newGame: document.querySelector("#new-game"),
-    demoGame: document.querySelector("#demo-game"),
     saveGame: document.querySelector("#save-game"),
     loadGame: document.querySelector("#load-game"),
+    savesDialog: document.querySelector("#saves-dialog"),
+    savesTitle: document.querySelector("#saves-title"),
+    savesDescription: document.querySelector("#saves-description"),
+    saveNameLabel: document.querySelector("#save-name-label"),
+    saveName: document.querySelector("#save-name"),
+    saveSlots: document.querySelector("#save-slots"),
+    savesFeedback: document.querySelector("#saves-feedback"),
+    savesConfirm: document.querySelector("#saves-confirm"),
+    savesCancel: document.querySelector("#saves-cancel"),
     optionsGame: document.querySelector("#options-game"),
     aboutGame: document.querySelector("#about-game"),
     optionsDialog: document.querySelector("#options-dialog"),
@@ -784,42 +799,174 @@
     updateCursor();
   }
 
-  function save() {
-    localStorage.setItem(SAVE_KEY, JSON.stringify(state));
-    elements.saveNote.textContent = "Partida guardada.";
+  function isCompatibleSave(saved) {
+    return saved && [2, 3, 4].includes(saved.version) && scenes[saved.scene];
   }
 
-  function load() {
-    const raw = localStorage.getItem(SAVE_KEY);
-    if (!raw) {
-      elements.saveNote.textContent = "Todavía no hay una partida guardada.";
+  function readSaveSlots() {
+    try {
+      const raw = localStorage.getItem(SAVE_SLOTS_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (!Array.isArray(parsed)) return null;
+        return Array.from({ length: SAVE_SLOT_COUNT }, (_, index) => {
+          const slot = parsed[index];
+          return slot && isCompatibleSave(slot.state) ? slot : null;
+        });
+      }
+
+      const slots = Array(SAVE_SLOT_COUNT).fill(null);
+      const legacy = localStorage.getItem(SAVE_KEY);
+      if (legacy) {
+        const oldSave = JSON.parse(legacy);
+        if (isCompatibleSave(oldSave)) {
+          slots[0] = {
+            name: "Partida anterior",
+            savedAt: new Date().toISOString(),
+            state: oldSave,
+          };
+        }
+      }
+      return slots;
+    } catch {
+      return null;
+    }
+  }
+
+  function storeSaveSlots(slots) {
+    try {
+      localStorage.setItem(SAVE_SLOTS_KEY, JSON.stringify(slots));
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  function saveSlot(index, name, slots = readSaveSlots()) {
+    if (!slots) return false;
+    slots[index] = {
+      name: name.slice(0, SAVE_NAME_LIMIT),
+      savedAt: new Date().toISOString(),
+      state: JSON.parse(JSON.stringify(state)),
+    };
+    return storeSaveSlots(slots);
+  }
+
+  function describeSaveSlot(slot) {
+    if (!slot) return "Vacía";
+    const sceneName = scenes[slot.state.scene]?.name || slot.state.scene;
+    const date = new Date(slot.savedAt);
+    const savedDate = Number.isNaN(date.getTime())
+      ? ""
+      : ` · ${date.toLocaleDateString("es-AR", { day: "2-digit", month: "2-digit", year: "2-digit" })}`;
+    return `${sceneName}${savedDate}`;
+  }
+
+  function renderSaveSlots() {
+    const buttons = Array.from({ length: SAVE_SLOT_COUNT }, (_, index) => {
+      const slot = saveSlots[index];
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "save-slot";
+      button.setAttribute("aria-pressed", String(index === selectedSaveSlot));
+
+      const number = document.createElement("span");
+      number.className = "save-slot-number";
+      number.textContent = `Ranura ${index + 1}`;
+      const name = document.createElement("strong");
+      name.textContent = slot?.name || "Vacía";
+      const detail = document.createElement("small");
+      detail.textContent = describeSaveSlot(slot);
+      button.append(number, name, detail);
+      button.addEventListener("click", () => {
+        const nameDraft = elements.saveName.value;
+        selectedSaveSlot = index;
+        if (saveMode === "save" && !nameDraft.trim()) elements.saveName.value = slot?.name || "";
+        renderSaveSlots();
+      });
+      return button;
+    });
+    elements.saveSlots.replaceChildren(...buttons);
+    elements.savesConfirm.disabled = saveMode === "load" && !saveSlots[selectedSaveSlot];
+  }
+
+  function openSaves(mode) {
+    saveMode = mode;
+    saveSlots = readSaveSlots();
+    if (!saveSlots) {
+      elements.saveNote.textContent = "No se pudieron leer las partidas guardadas.";
+      return;
+    }
+    if (localStorage.getItem(SAVE_SLOTS_KEY) === null && !storeSaveSlots(saveSlots)) {
+      elements.saveNote.textContent = "No se pudo acceder al guardado de este navegador.";
       return;
     }
 
-    try {
-      const saved = JSON.parse(raw);
-      if (![2, 3, 4].includes(saved.version) || !scenes[saved.scene]) throw new Error("save incompatible");
-      const fresh = initialState();
-      state = {
-        ...fresh,
-        ...saved,
-        version: 4,
-        flags: { ...fresh.flags, ...saved.flags },
-        minigames: { ...fresh.minigames, ...saved.minigames },
-      };
-      elements.saveNote.textContent = "Partida cargada.";
-      say("Continuamos desde la última partida guardada.");
-      render();
-      playSelectedMusic();
-      elements.menu.close();
-    } catch {
-      elements.saveNote.textContent = "La partida guardada no es compatible.";
+    const preferred = mode === "load"
+      ? (activeSaveSlot ?? saveSlots.findIndex(Boolean))
+      : (activeSaveSlot ?? saveSlots.findIndex((slot) => !slot));
+    selectedSaveSlot = preferred < 0 ? 0 : preferred;
+    elements.savesTitle.textContent = mode === "save" ? "Guardar partida" : "Cargar partida";
+    elements.savesDescription.textContent = mode === "save"
+      ? "Elegí una ranura y asignale un nombre. Podés guardar hasta 3 partidas."
+      : "Elegí una de las partidas guardadas.";
+    elements.saveNameLabel.hidden = mode !== "save";
+    elements.saveName.hidden = mode !== "save";
+    elements.saveName.value = saveSlots[selectedSaveSlot]?.name || "";
+    elements.savesFeedback.textContent = "";
+    elements.savesConfirm.textContent = mode === "save" ? "Guardar" : "Cargar";
+    renderSaveSlots();
+    if (!elements.savesDialog.open) elements.savesDialog.showModal();
+    if (mode === "save") elements.saveName.focus();
+  }
+
+  function saveSelectedSlot() {
+    const name = elements.saveName.value.trim().slice(0, SAVE_NAME_LIMIT);
+    if (!name) {
+      elements.savesFeedback.textContent = "Escribí un nombre para la partida.";
+      elements.saveName.focus();
+      return;
     }
+    if (saveSlots[selectedSaveSlot] && !window.confirm(`¿Reemplazar “${saveSlots[selectedSaveSlot].name}” en la ranura ${selectedSaveSlot + 1}?`)) {
+      return;
+    }
+    if (!saveSlot(selectedSaveSlot, name, saveSlots)) {
+      elements.savesFeedback.textContent = "No se pudo guardar. Revisá el espacio disponible en el navegador.";
+      return;
+    }
+    activeSaveSlot = selectedSaveSlot;
+    elements.saveNote.textContent = `Partida “${name}” guardada.`;
+    elements.savesDialog.close();
+  }
+
+  function loadSelectedSlot() {
+    const slot = saveSlots[selectedSaveSlot];
+    if (!slot || !isCompatibleSave(slot.state)) {
+      elements.savesFeedback.textContent = "Esta ranura no contiene una partida compatible.";
+      return;
+    }
+    const saved = slot.state;
+    const fresh = initialState();
+    state = {
+      ...fresh,
+      ...saved,
+      version: 4,
+      flags: { ...fresh.flags, ...saved.flags },
+      minigames: { ...fresh.minigames, ...saved.minigames },
+    };
+    activeSaveSlot = selectedSaveSlot;
+    elements.saveNote.textContent = `Partida “${slot.name}” cargada.`;
+    say(`Continuamos desde “${slot.name}”.`);
+    render();
+    playSelectedMusic();
+    elements.savesDialog.close();
+    elements.menu.close();
   }
 
   function startNewGame() {
     playSelectedMusic();
     state = initialState();
+    activeSaveSlot = null;
     say("No sé cómo llegué hasta acá. Tengo que encontrar una salida.");
     render();
     if (elements.finalDialog.open) elements.finalDialog.close();
@@ -831,26 +978,13 @@
       state.flags.gameWon = true;
       say("La llave dorada abre el portón. Por fin puedo escapar.");
       render();
-      save();
+      if (activeSaveSlot !== null) {
+        const slots = readSaveSlots();
+        if (slots) saveSlot(activeSaveSlot, slots[activeSaveSlot]?.name || "Partida", slots);
+      }
     }
     if (selectedMusic !== "off") playMusic("mus2");
     if (!elements.finalDialog.open) elements.finalDialog.showModal();
-  }
-
-  function startPuzzleDemo() {
-    playSelectedMusic();
-    state = initialState();
-    addItem("screwdriver");
-    addItem("handle");
-    addItem("battery");
-    state.taken.push("screwdriver", "handle", "battery");
-    state.flags.computerOn = true;
-    state.flags.diningDoorOpen = true;
-    state.scene = "PG1";
-    state.action = "interact";
-    say("Modo de prueba: la computadora está encendida y llevás la pila para probar los tres minijuegos.");
-    render();
-    elements.menu.close();
   }
 
   elements.actions.forEach((button) => {
@@ -865,9 +999,13 @@
     elements.menu.close();
   });
   elements.newGame.addEventListener("click", startNewGame);
-  elements.demoGame.addEventListener("click", startPuzzleDemo);
-  elements.saveGame.addEventListener("click", save);
-  elements.loadGame.addEventListener("click", load);
+  elements.saveGame.addEventListener("click", () => openSaves("save"));
+  elements.loadGame.addEventListener("click", () => openSaves("load"));
+  elements.savesConfirm.addEventListener("click", () => {
+    if (saveMode === "save") saveSelectedSlot();
+    else loadSelectedSlot();
+  });
+  elements.savesCancel.addEventListener("click", () => elements.savesDialog.close());
   elements.optionsGame.addEventListener("click", openOptions);
   elements.aboutGame.addEventListener("click", () => elements.aboutDialog.showModal());
   elements.optionsTabs.forEach((button) => {

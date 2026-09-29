@@ -32,8 +32,7 @@ No hace falta instalar dependencias ni compilar.
 - Incluye 16 pistas WAV. El autor declara que son composiciones propias y autorizó su publicación junto con el port web.
 - Menú de opciones inspirado en la ventana original, con pestañas Juego, Video y Sonido. Dificultad, idioma, resolución y detalle conservan los valores fijos y las respuestas humorísticas del Delphi; sólo la música cambia realmente. Se omitió la opción solicitada.
 - Ventana `Acerca de` basada en el formulario original, actualizada para identificar el port web de 2026.
-- Acceso de prueba desde el menú con la computadora encendida y la pila necesaria para probar los minijuegos.
-- Inventario y guardado/carga con `localStorage`.
+- Inventario y hasta tres ranuras de guardado con nombre en `localStorage`; los guardados anteriores se migran a la primera ranura.
 - Uso directo de los fondos y objetos originales, sin duplicar recursos.
 - Sprites PNG optimizados con la máscara magenta de Delphi convertida a transparencia real.
 

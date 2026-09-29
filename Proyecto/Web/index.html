@@ -48,15 +48,29 @@
         <div class="dialog-actions">
           <button id="continue-game" type="button">&gt; Continuar &lt;</button>
           <button id="new-game" type="button">&gt; Nueva partida &lt;</button>
-          <button id="demo-game" type="button">&gt; Probar minijuegos &lt;</button>
           <button id="load-game" type="button">&gt; Cargar partida &lt;</button>
           <button id="save-game" type="button">&gt; Guardar partida &lt;</button>
           <button id="options-game" type="button">&gt; Opciones &lt;</button>
           <button id="about-game" type="button">&gt; Acerca de &lt;</button>
         </div>
-        <p class="save-note" id="save-note">La partida se guarda en este navegador.</p>
+        <p class="save-note" id="save-note">Hasta 3 partidas guardadas en este navegador.</p>
         <small class="copyright">(C) 2014-2015 · Port web 2026</small>
       </div>
+    </dialog>
+
+    <dialog id="saves-dialog" class="game-dialog saves-dialog" aria-labelledby="saves-title">
+      <section class="saves-card">
+        <h2 id="saves-title">Guardar partida</h2>
+        <p id="saves-description">Elegí una ranura para guardar el progreso.</p>
+        <label id="save-name-label" for="save-name">Nombre de la partida</label>
+        <input id="save-name" type="text" maxlength="32" autocomplete="off" placeholder="Mi partida" />
+        <div id="save-slots" class="save-slots" role="group" aria-label="Ranuras de guardado"></div>
+        <p id="saves-feedback" class="save-note" aria-live="polite"></p>
+        <div class="dialog-actions horizontal">
+          <button id="saves-confirm" type="button">Guardar</button>
+          <button id="saves-cancel" type="button">Volver</button>
+        </div>
+      </section>
     </dialog>
 
     <audio id="music-player" preload="none"></audio>
